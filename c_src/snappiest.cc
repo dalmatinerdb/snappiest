@@ -274,7 +274,7 @@ static ErlNifFunc nif_functions[] = {
 };
 
 
-ERL_NIF_INIT(snappyer, nif_functions, &on_load, &on_reload, &on_upgrade, NULL);
+ERL_NIF_INIT(snappiest, nif_functions, &on_load, &on_reload, &on_upgrade, NULL);
 
 
 END_C

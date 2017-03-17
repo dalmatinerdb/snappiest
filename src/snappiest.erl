@@ -13,7 +13,7 @@
 %% License for the specific language governing permissions and limitations under
 %% the License.
 
--module(snappyer).
+-module(snappiest).
 
 -export([compress/1, decompress/1]).
 -export([uncompressed_length/1, is_valid/1]).
@@ -23,7 +23,7 @@
 -spec init() -> ok.
 init() ->
   PrivDir =
-    case code:priv_dir(?APPLICATION) of
+    case code:priv_dir(snappiest) of
       {error, bad_name} ->
         {ok, Cwd} = file:get_cwd(),
         Priv = filename:join([Cwd, "..", "priv"]),
@@ -34,7 +34,7 @@ init() ->
       Dir ->
         Dir
     end,
-  SoName = filename:join([PrivDir, ?APPLICATION]),
+  SoName = filename:join([PrivDir, snappiest_nif]),
   _ = erlang:load_nif(SoName, 0),
   case erlang:system_info(otp_release) of
     "R13B03" -> true;

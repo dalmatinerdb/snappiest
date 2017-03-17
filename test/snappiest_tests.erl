@@ -13,7 +13,7 @@
 %% License for the specific language governing permissions and limitations under
 %% the License.
 
--module(snappyer_tests).
+-module(snappiest_tests).
 -include_lib("eunit/include/eunit.hrl").
 
 
@@ -28,26 +28,26 @@ compression() ->
     DataIoList =
       lists:duplicate(11, <<"words that go unspoken, deeds that go undone">>),
     Data = iolist_to_binary(DataIoList),
-    Result = snappyer:compress(Data),
+    Result = snappiest:compress(Data),
     ?assertMatch({ok, _}, Result),
     {ok, Compressed} = Result,
 
     ?assertEqual(true, byte_size(Compressed) < byte_size(Data)),
 
-    ?assertEqual(true, snappyer:is_valid(Compressed)),
-    ?assertEqual(false, snappyer:is_valid(Data)),
-    ?assertEqual(false, snappyer:is_valid(<<"foobar123">>)),
+    ?assertEqual(true, snappiest:is_valid(Compressed)),
+    ?assertEqual(false, snappiest:is_valid(Data)),
+    ?assertEqual(false, snappiest:is_valid(<<"foobar123">>)),
     ?assertEqual({ok, byte_size(Data)},
-                 snappyer:uncompressed_length(Compressed)),
+                 snappiest:uncompressed_length(Compressed)),
 
-    Result2 = snappyer:compress(DataIoList),
+    Result2 = snappiest:compress(DataIoList),
     ?assertMatch({ok, _}, Result2),
     {ok, Compressed2} = Result2,
 
     ?assertEqual(byte_size(Compressed2), byte_size(Compressed)),
-    ?assertEqual(true, snappyer:is_valid(Compressed2)),
+    ?assertEqual(true, snappiest:is_valid(Compressed2)),
     ?assertEqual({ok, byte_size(Data)},
-                 snappyer:uncompressed_length(Compressed2)),
+                 snappiest:uncompressed_length(Compressed2)),
     ok.
 
 
@@ -55,57 +55,57 @@ decompression() ->
     DataIoList =
       lists:duplicate(11, <<"words that go unspoken, deeds that go undone">>),
     Data = iolist_to_binary(DataIoList),
-    Result = snappyer:compress(Data),
+    Result = snappiest:compress(Data),
     ?assertMatch({ok, _}, Result),
     {ok, Compressed} = Result,
-    ?assertEqual({ok, Data}, snappyer:decompress(Compressed)),
+    ?assertEqual({ok, Data}, snappiest:decompress(Compressed)),
 
-    Result2 = snappyer:compress(DataIoList),
+    Result2 = snappiest:compress(DataIoList),
     ?assertMatch({ok, _}, Result2),
     {ok, Compressed2} = Result2,
-    ?assertEqual({ok, Data}, snappyer:decompress(Compressed2)),
+    ?assertEqual({ok, Data}, snappiest:decompress(Compressed2)),
 
     BigData = <<"mVPZzfDzKNeZrh1QdkMEgh2U0Bv2i3+bLJaCqgNibXuMuwfjrqTuxPGupxjI",
                 "xEbuYR+u/KZvSDhoxnkpPbgJo7oiQv2ibDrrGZx7RDs3Nn7Ww51B7+zUL4tr",
                 "G+16TlJilJT47Z4cQn8EpWex2bMRFAoJ6AMJAodLGbiD78yUyIorRKVcCa+k",
                 "udzjsqYAoXzW/z8JCB6rbGGSbnLyqztR//ch5sRwSvYARlV+IamzBkDXFZxj",
                 "5TAwAl2ZcbCeMX0qgXX4EonVZxc=">>,
-    Result3 = snappyer:compress(BigData),
+    Result3 = snappiest:compress(BigData),
     ?assertMatch({ok, _}, Result3),
     {ok, Compressed3} = Result3,
-    ?assertEqual({ok, BigData}, snappyer:decompress(Compressed3)),
+    ?assertEqual({ok, BigData}, snappiest:decompress(Compressed3)),
     ok.
 
 check_double_decompress_doesnt_cause_segault_test() ->
     % Try to decompress an empty binary
-    ?assertMatch({ok,<<>>}, snappyer:decompress(<<>>)),
+    ?assertMatch({ok,<<>>}, snappiest:decompress(<<>>)),
     % And once more...
-    ?assertMatch({ok,<<>>}, snappyer:decompress(<<>>)),
+    ?assertMatch({ok,<<>>}, snappiest:decompress(<<>>)),
     ok.
 
 check_double_compress_doesnt_cause_segault_test() ->
     % Try to compress an empty binary
-    ?assertMatch({ok,<<>>},snappyer:compress(<<>>)),
+    ?assertMatch({ok,<<>>},snappiest:compress(<<>>)),
     % And once more...
-    ?assertMatch({ok,<<>>},snappyer:compress(<<>>)),
+    ?assertMatch({ok,<<>>},snappiest:compress(<<>>)),
     ok.
 
 can_compress_and_decompress_empty_binary_test() ->
     % Try to compress an empty binary...
-    {ok, Compressed} = snappyer:compress(<<>>),
+    {ok, Compressed} = snappiest:compress(<<>>),
     % Try to decompress the result of the compression...
-    {ok, _Decompressed} = snappyer:decompress(Compressed),
+    {ok, _Decompressed} = snappiest:decompress(Compressed),
     ok.
 
 can_compress_an_empty_binary_test() ->
     % Try to compress an empty binary...
-    {ok, Compressed} = snappyer:compress(<<>>),
+    {ok, Compressed} = snappiest:compress(<<>>),
     % Check an empty binary was returned
     ?assertMatch(Compressed,<<>>),
     ok.
 
 can_decompress_an_empty_binary_test() ->
     % Try to decompress an empty binary
-    {ok, Decompressed} = snappyer:decompress(<<>>),
+    {ok, Decompressed} = snappiest:decompress(<<>>),
     ?assertMatch(Decompressed,<<>>),
     ok.
